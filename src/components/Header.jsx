@@ -20,6 +20,13 @@ return (
 };
 
 const Header = () => {
+   const [navIsVisible, setNavIsVisible] = useState(false);
+
+   const navVisibilityHandler = () => {
+       setNavIsVisible((curState) => {
+           return !curState;
+       });
+   };
     return (
         <section>
             <header
@@ -27,7 +34,7 @@ const Header = () => {
                 <div className="h-10 w-10">
                 <img src={images.logo} alt="Logo" />
                 </div>
-                <div className="flex gap-x-9 items-center">
+                <div className="flex flex-col w-full lg:w-auto justify-center lg:justify-right lg:flex-row fixed top-0 bottom-0 -right-full lg:static gap-x-9 items-center">
                     <ul className="flex gap-x-5 font-semibold">
 
                         {navItemsInfo.map((item) => (
