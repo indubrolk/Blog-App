@@ -1,17 +1,23 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ["./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",],
+module.exports = {
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        poppins:['Poppins','sans-serif'],
-      }
+      colors:{
+        primary: "#ff7015",
+        dark:{
+          hard: "#123456",
+          soft: "#654321",
+        },
+      },
+      fontFamily:{
+        opensans: ["'Open Sans'", "serif"],
+        roboto: ["'Roboto'", "serif"],
+
+      },
 
     },
   },
-  plugins: [
-    ('@tailwindcss/aspect-ratio'),
-  ],
-}
+  plugins: [],
+};
 
