@@ -79,7 +79,7 @@ const Header = ({
                         <div className="flex items-center space-x-6">
                             <button
                                 onClick={onBrowseArticles}
-                                className={px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center }
+                                className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center "
                             >
                                 <Search className="w-4 h-4 mr-2" />
                                 Browse Articles
@@ -89,7 +89,7 @@ const Header = ({
                                 <button
                                     key={category}
                                     onClick={() => onSelectCategory(category)}
-                                    className={px-3 py-2 rounded-md text-sm font-medium transition-colors }
+                                    className="px-3 py-2 rounded-md text-sm font-medium transition-colors "
                                 >
                                     {category}
                                 </button>
@@ -101,7 +101,7 @@ const Header = ({
                                 <>
                                     <button
                                         onClick={onShowUserArticles}
-                                        className={px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center }
+                                        className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center"
                                     >
                                         <User className="w-4 h-4 mr-1" />
                                         My Articles
