@@ -4,10 +4,10 @@ This repository now includes a backend built with Express.js and MongoDB (via Mo
 
 ## Backend (Express + MongoDB)
 
-- Location: `server/`
-- Env file: copy `server/.env.example` to `server/.env` and set `MONGODB_URI` and `CORS_ORIGIN`.
+- Location: `backend/`
+- Env file: copy `backend/.env.example` to `backend/.env` and set `MONGODB_URI` and `CORS_ORIGIN`.
 - Dev run:
-  - Install deps: `cd server && npm install`
+  - Install deps: `cd backend && npm install`
   - Start dev server: `npm run dev` (listens on `http://localhost:5000` by default)
 - Endpoints:
   - `GET /api/health` – health check
@@ -21,9 +21,9 @@ The backend uses CORS with `CORS_ORIGIN` (default `http://localhost:5173`) to al
 
 ## Frontend (Vite + React)
 
-- Location: `my-app/`
-- Dev run: `cd my-app && npm install && npm run dev` (opens at `http://localhost:5173`)
-- Proxy: Vite dev server proxies `/api/*` to `http://localhost:5000` by default. To target another backend URL, set `VITE_API_BASE_URL` in `my-app/.env`.
+- Location: `frontend/`
+- Dev run: `cd frontend && npm install && npm run dev` (opens at `http://localhost:5173`)
+- Proxy: Vite dev server proxies `/api/*` to `http://localhost:5000` by default. To target another backend URL, set `VITE_API_BASE_URL` in `frontend/.env`.
 
 ---
 
