@@ -21,7 +21,7 @@ const Header = ({
     const categoriesWithoutAll = categories.filter((category) => category !== 'all');
 
     return (
-        <header className="bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg sticky top-0 z-50">
+        <header className="bg-gradient-to-r from-orange-500 to-gray-700 text-white shadow-lg sticky top-0 z-50">
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center py-4">
                     <div className="flex items-center space-x-2">
