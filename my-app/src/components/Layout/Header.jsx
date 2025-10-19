@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, LogIn, LogOut, Search, Plus } from 'lucide-react';
+import logo from './logo1.png';
 
 const Header = ({
     user,
@@ -21,7 +22,7 @@ const Header = ({
     const categoriesWithoutAll = categories.filter((category) => category !== 'all');
 
     return (
-        <header className="bg-gradient-to-r from-orange-500 to-gray-700 text-white shadow-lg sticky top-0 z-50">
+        <header className="bg-gradient-to-r from-gray-400 to-orange-500 text-white shadow-lg sticky top-0 z-50">
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center py-4">
                     <div className="flex items-center space-x-2">
@@ -29,7 +30,10 @@ const Header = ({
                             className="cursor-pointer hover:opacity-90 transition-opacity"
                             onClick={onGoHome}
                         >
-                            <h1 className="text-3xl font-bold">TechBlog</h1>
+                            <img src={logo} alt="Logo" className="h-20 w-20 rounded-full" />
+
+
+                            {/*<h1 className="text-3xl font-bold">TechBlog</h1>*/}
                             <p className="text-blue-200 text-sm">Modern Tech Articles and Tutorials</p>
                         </div>
                     </div>
