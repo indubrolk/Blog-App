@@ -6,6 +6,7 @@ import RegisterForm from './components/Auth/RegisterForm';
 import ArticleForm from './components/Articles/ArticleForm';
 import ArticleCard from './components/Articles/ArticleCard';
 import ArticleView from './components/Articles/ArticleView';
+import { postsApi } from './utils/api';
 
 const SAMPLE_ARTICLES = [
     {
@@ -61,7 +62,38 @@ const TechBlog = () => {
     const [articleForm, setArticleForm] = useState(() => createDefaultArticleForm());
 
     useEffect(() => {
-        setArticles(SAMPLE_ARTICLES);
+        let cancelled = false;
+
+        const mapPostToArticle = (post) => ({
+            id: post._id || post.id,
+            title: post.title,
+            content: post.content,
+            author: post.author,
+            authorId: post.authorId,
+            category: post.category || 'General',
+            tags: Array.isArray(post.tags) ? post.tags : [],
+            createdAt: post.createdAt ? new Date(post.createdAt) : new Date(),
+            excerpt: post.excerpt || (post.content ? `${post.content.substring(0, 100)}...` : ''),
+        });
+
+        (async () => {
+            try {
+                const data = await postsApi.list();
+                if (!cancelled) {
+                    const mapped = data.map(mapPostToArticle);
+                    setArticles(mapped);
+                }
+            } catch (_err) {
+                // Fallback to local sample data if backend is unavailable
+                if (!cancelled) {
+                    setArticles(SAMPLE_ARTICLES);
+                }
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     const filteredArticles = useMemo(() => {
@@ -143,7 +175,7 @@ const TechBlog = () => {
         setShowUserArticles(false);
     };
 
-    const handleCreateArticle = (event) => {
+    const handleCreateArticle = async (event) => {
         event.preventDefault();
 
         if (!user) {
@@ -155,24 +187,45 @@ const TechBlog = () => {
             .map((tag) => tag.trim())
             .filter(Boolean);
 
-        const newArticle = {
-            id: Date.now(),
+        const payload = {
             title: articleForm.title,
             content: articleForm.content,
             author: user.username,
             authorId: user.id,
             category: articleForm.category,
             tags,
-            createdAt: new Date(),
             excerpt: `${articleForm.content.substring(0, 100)}...`,
         };
 
-        setArticles((previous) => [newArticle, ...previous]);
+        try {
+            const created = await postsApi.create(payload);
+            const article = {
+                id: created._id || created.id,
+                title: created.title,
+                content: created.content,
+                author: created.author,
+                authorId: created.authorId,
+                category: created.category || 'General',
+                tags: Array.isArray(created.tags) ? created.tags : [],
+                createdAt: created.createdAt ? new Date(created.createdAt) : new Date(),
+                excerpt: created.excerpt || payload.excerpt,
+            };
+            setArticles((previous) => [article, ...previous]);
+        } catch (_err) {
+            // Fallback to local insertion if API not available
+            const localArticle = {
+                id: Date.now(),
+                ...payload,
+                createdAt: new Date(),
+            };
+            setArticles((previous) => [localArticle, ...previous]);
+        }
+
         resetArticleFormState();
         setCurrentView('home');
     };
 
-    const handleUpdateArticle = (event) => {
+    const handleUpdateArticle = async (event) => {
         event.preventDefault();
 
         if (!selectedArticle) {
@@ -184,26 +237,52 @@ const TechBlog = () => {
             .map((tag) => tag.trim())
             .filter(Boolean);
 
-        setArticles((previous) =>
-            previous.map((article) =>
-                article.id === selectedArticle.id
-                    ? {
-                        ...article,
-                        title: articleForm.title,
-                        content: articleForm.content,
-                        category: articleForm.category,
-                        tags,
-                        excerpt: `${articleForm.content.substring(0, 100)}...`,
-                    }
-                    : article
-            )
-        );
+        const payload = {
+            title: articleForm.title,
+            content: articleForm.content,
+            category: articleForm.category,
+            tags,
+            excerpt: `${articleForm.content.substring(0, 100)}...`,
+        };
+
+        try {
+            const updated = await postsApi.update(selectedArticle.id, payload);
+            const mapped = {
+                id: updated._id || updated.id,
+                title: updated.title,
+                content: updated.content,
+                author: updated.author || selectedArticle.author,
+                authorId: updated.authorId || selectedArticle.authorId,
+                category: updated.category || 'General',
+                tags: Array.isArray(updated.tags) ? updated.tags : [],
+                createdAt: updated.createdAt ? new Date(updated.createdAt) : selectedArticle.createdAt,
+                excerpt: updated.excerpt || payload.excerpt,
+            };
+            setArticles((previous) => previous.map((a) => (a.id === selectedArticle.id ? mapped : a)));
+        } catch (_err) {
+            // Fallback to local update
+            setArticles((previous) =>
+                previous.map((article) =>
+                    article.id === selectedArticle.id
+                        ? {
+                            ...article,
+                            ...payload,
+                          }
+                        : article
+                )
+            );
+        }
 
         resetArticleFormState();
         setCurrentView('home');
     };
 
-    const handleDeleteArticle = (articleId) => {
+    const handleDeleteArticle = async (articleId) => {
+        try {
+            await postsApi.remove(articleId);
+        } catch (_err) {
+            // Ignore API error and still remove locally to keep UX simple
+        }
         setArticles((previous) => previous.filter((article) => article.id !== articleId));
     };
 
