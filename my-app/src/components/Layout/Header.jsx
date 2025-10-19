@@ -34,7 +34,7 @@ const Header = ({
 
 
                             {/*<h1 className="text-3xl font-bold">TechBlog</h1>*/}
-                            <p className="text-blue-200 text-sm">Modern Tech Articles and Tutorials</p>
+                            <h1 className="text-black text-sm">Modern Tech Articles and Tutorials</h1>
                         </div>
                     </div>
 
